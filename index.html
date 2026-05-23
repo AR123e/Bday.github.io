@@ -3,277 +3,176 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Cute Birthday Experience</title>
-
+<title>Birthday Magic ✨</title>
 <style>
-*{box-sizing:border-box}
-
+*{box-sizing:border-box;margin:0;padding:0}
 body{
-margin:0;
-height:100vh;
-overflow:hidden;
-font-family:system-ui;
-background:linear-gradient(135deg,#0b0b1a,#1a1033,#2a1b4a);
-color:#fff;
+  font-family:system-ui;
+  overflow:hidden;
+  height:100vh;
+  background:radial-gradient(circle at top,#24123d,#0a0818 70%);
+  color:#fff;
 }
+canvas{position:fixed;inset:0;z-index:0}
 
-/* animated gradient blobs */
+/* aurora blobs */
 .blob{
-position:fixed;
-width:300px;
-height:300px;
-filter:blur(80px);
-opacity:.4;
-border-radius:50%;
-animation:move 12s infinite alternate ease-in-out;
+  position:fixed;width:340px;height:340px;border-radius:50%;
+  filter:blur(90px);opacity:.45;z-index:0;
+  animation:drift 14s ease-in-out infinite alternate;
 }
-
-.blob1{background:#ff5c8a;top:10%;left:10%}
-.blob2{background:#6c63ff;bottom:10%;right:10%}
-.blob3{background:#ffd166;top:40%;left:50%}
-
-@keyframes move{
-0%{transform:translate(0,0) scale(1)}
-100%{transform:translate(60px,-40px) scale(1.2)}
-}
-
-canvas{
-position:fixed;
-inset:0;
-z-index:0;
-opacity:.25;
-}
+.b1{background:#ff71a8;top:5%;left:8%}
+.b2{background:#7f7cff;bottom:8%;right:10%}
+.b3{background:#ffd56b;top:40%;left:40%}
+@keyframes drift{to{transform:translate(60px,-50px) scale(1.2)}}
 
 .scene{
-position:absolute;
-inset:0;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
-opacity:0;
-transform:translateY(20px);
-transition:.8s ease;
-text-align:center;
-pointer-events:none;
+  position:absolute;inset:0;display:flex;justify-content:center;align-items:center;
+  padding:20px;opacity:0;transform:scale(.95) translateY(20px);
+  transition:1s ease;pointer-events:none;z-index:2;text-align:center;
 }
-
-.scene.active{
-opacity:1;
-transform:translateY(0);
-pointer-events:auto;
-}
+.scene.active{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}
 
 .card{
-max-width:520px;
-width:100%;
-padding:26px;
-border-radius:24px;
-background:rgba(255,255,255,0.07);
-backdrop-filter:blur(16px);
-border:1px solid rgba(255,255,255,0.12);
-box-shadow:0 40px 120px rgba(0,0,0,0.6);
-animation:pop .6s ease;
+  max-width:560px;width:100%;padding:30px;border-radius:28px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 40px 120px rgba(0,0,0,.65);
+  animation:pop .8s ease;
 }
+@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 
-@keyframes pop{
-from{transform:scale(.95);opacity:0}
-to{transform:scale(1);opacity:1}
-}
-
-h1{
-font-size:1.9rem;
-margin-bottom:10px;
-}
-
-p{
-white-space:pre-line;
-line-height:1.6;
-min-height:120px;
-opacity:.95;
-}
+h1{font-size:2rem;margin-bottom:12px}
+p{white-space:pre-line;line-height:1.7;min-height:140px;opacity:.95}
 
 button{
-margin-top:12px;
-padding:12px 18px;
-border:none;
-border-radius:14px;
-background:linear-gradient(90deg,#ff5c8a,#ff9f68);
-color:white;
-font-size:1rem;
-cursor:pointer;
-transition:.2s;
-box-shadow:0 10px 25px rgba(255,92,138,.3);
+  margin-top:14px;padding:14px 20px;border:none;border-radius:16px;
+  background:linear-gradient(90deg,#ff5c8a,#ff9f68);
+  color:#fff;font-size:1rem;cursor:pointer;
+  box-shadow:0 12px 30px rgba(255,92,138,.35);
+  transition:.25s;
+}
+button:hover{transform:translateY(-2px) scale(1.03)}
+button:active{transform:scale(.97)}
+
+/* cute floating stickers */
+.floaty{position:fixed;font-size:22px;pointer-events:none;animation:rise linear forwards;z-index:3}
+@keyframes rise{
+  0%{transform:translateY(20px) scale(.8);opacity:0}
+  10%{opacity:1}
+  100%{transform:translateY(-100vh) rotate(360deg) scale(1.2);opacity:0}
 }
 
-button:hover{
-transform:scale(1.03);
-box-shadow:0 15px 35px rgba(255,92,138,.5);
+/* stars twinkle */
+.star{
+  position:fixed;width:3px;height:3px;background:white;border-radius:50%;
+  animation:twinkle 2s infinite alternate;opacity:.6;z-index:1;
 }
+@keyframes twinkle{to{opacity:1;transform:scale(1.8)}}
 
-button:active{
-transform:scale(.96);
+/* cursor pet */
+.pet{position:fixed;font-size:24px;pointer-events:none;z-index:4;transition:.12s}
+
+/* confetti burst */
+.confetti{position:fixed;font-size:14px;pointer-events:none;z-index:5;animation:burst 1s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}
+
+.music{
+  position:fixed;top:14px;right:14px;z-index:6;
+  background:rgba(255,255,255,.1);padding:10px 14px;border-radius:999px;
+  font-size:.9rem;cursor:pointer;border:1px solid rgba(255,255,255,.12)
 }
-
-/* floating emojis */
-.floating{
-position:fixed;
-font-size:18px;
-animation:floatUp linear infinite;
-opacity:.85;
-pointer-events:none;
-}
-
-@keyframes floatUp{
-0%{transform:translateY(110vh) scale(.8);opacity:0}
-10%{opacity:1}
-100%{transform:translateY(-10vh) scale(1.2);opacity:0}
-}
-
-/* cursor trail */
-.trail{
-position:fixed;
-width:8px;
-height:8px;
-border-radius:50%;
-background:white;
-pointer-events:none;
-animation:fade .6s forwards;
-}
-
-@keyframes fade{
-to{transform:scale(2);opacity:0}
-}
-
 </style>
 </head>
-
 <body>
 
-<div class="blob blob1"></div>
-<div class="blob blob2"></div>
-<div class="blob blob3"></div>
-
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 <canvas id="bg"></canvas>
+<div class="music" onclick="toggleMusic()">🎵 Music</div>
+<audio id="music" loop>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b5c4b1b5.mp3?filename=soft-piano-ambient-110397.mp3">
+</audio>
 
 <div class="scene active" id="s1">
-<div class="card">
-<h1>🎀 Birthday Mode</h1>
-<p>A small cute experience made for someone who makes life lighter ✨</p>
-<button onclick="start()">Start</button>
-</div>
+  <div class="card">
+    <h1>🎀 Birthday Surprise</h1>
+    <p>A tiny magical experience for someone fun, chaotic, and impossible to ignore ✨</p>
+    <button onclick="start(event)">Open Surprise</button>
+  </div>
 </div>
 
 <div class="scene" id="s2">
-<div class="card">
-<h1>Hey Aisha 👋</h1>
-<p id="t"></p>
-<button onclick="next()">Continue</button>
-</div>
+  <div class="card">
+    <h1>Hey Aisha 👋</h1>
+    <p id="t"></p>
+    <button onclick="next(event)">One More</button>
+  </div>
 </div>
 
 <div class="scene" id="s3">
-<div class="card">
-<h1>💖 Final</h1>
-<p id="f"></p>
-</div>
+  <div class="card">
+    <h1>💖 Happy Birthday</h1>
+    <p id="f"></p>
+  </div>
 </div>
 
 <script>
-
-const c=document.getElementById("bg");
-const x=c.getContext("2d");
-c.width=innerWidth;
-c.height=innerHeight;
-
-let p=Array.from({length:60},()=>({
-x:Math.random()*c.width,
-y:Math.random()*c.height,
-r:Math.random()*2,
-dx:(Math.random()-.5)*.3,
-dy:(Math.random()-.5)*.3
-}));
-
-function anim(){
-x.clearRect(0,0,c.width,c.height);
-p.forEach(i=>{
-i.x+=i.dx;i.y+=i.dy;
-if(i.x<0||i.x>c.width)i.dx*=-1;
-if(i.y<0||i.y>c.height)i.dy*=-1;
-x.beginPath();
-x.arc(i.x,i.y,i.r,0,Math.PI*2);
-x.fillStyle="rgba(255,255,255,0.25)";
-x.fill();
-});
-requestAnimationFrame(anim);
-}
-anim();
-
-function show(id){
-document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
-document.getElementById(id).classList.add('active');
+// stars
+for(let i=0;i<50;i++){
+ let s=document.createElement('div');
+ s.className='star';
+ s.style.left=Math.random()*100+'vw';
+ s.style.top=Math.random()*100+'vh';
+ s.style.animationDelay=Math.random()*2+'s';
+ document.body.appendChild(s);
 }
 
-function type(id,text,i=0){
-const el=document.getElementById(id);
-if(i===0)el.innerHTML="";
-if(i<text.length){
-el.innerHTML+=text[i];
-setTimeout(()=>type(id,text,i+1),25);
+// particle bg
+const c=document.getElementById('bg'),x=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+let pts=Array.from({length:70},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3}));
+function bg(){x.clearRect(0,0,c.width,c.height);pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>c.width)p.dx*=-1;if(p.y<0||p.y>c.height)p.dy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fillStyle='rgba(255,255,255,.25)';x.fill()});requestAnimationFrame(bg)}bg();
+
+function show(id){document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function type(id,text,i=0){let el=document.getElementById(id);if(i===0)el.innerHTML='';if(i<text.length){el.innerHTML+=text[i];setTimeout(()=>type(id,text,i+1),24)}}
+
+function start(e){
+ show('s2');spawn();burst(e);
+ type('t',`Okay 😄\n\nYou somehow manage to be:\nfunny 😂 stressed 😭 happy 😆 dramatic 😤\n\nAnd somehow… still cute.`)
 }
-}
-
-function start(){
-show('s2');
-spawn();
-
-const msg=`Okay this is just a small thing 😄
-
-You’ve got that mix of moods:
-funny 😂 stressed 😭 happy 😆 angry 😤
-
-But somehow it all just fits you perfectly.`;
-
-type('t',msg);
-}
-
-function next(){
-show('s3');
-spawn();
-
-const msg=`So yeah Aisha 💖
-
-Just stay your chaotic-cute self.
-That’s honestly the best version already.`;
-
-type('f',msg);
+function next(e){
+ show('s3');spawn();burst(e);
+ type('f',`Happy Birthday Aisha 🎉\n\nStay funny. Stay chaotic. Stay adorable.\n\nThat’s already a pretty good deal 💖`)
 }
 
 function spawn(){
-const emojis=["💖","✨","🎀","🐱","🐻","💫","🌸"];
-
-for(let i=0;i<16;i++){
-const d=document.createElement('div');
-d.className='floating';
-d.innerText=emojis[Math.floor(Math.random()*emojis.length)];
-d.style.left=Math.random()*100+'vw';
-d.style.animationDuration=(4+Math.random()*4)+'s';
-document.body.appendChild(d);
-setTimeout(()=>d.remove(),8000);
-}
+ let arr=['💖','🌸','✨','🎀','🐻','🐱','💫'];
+ for(let i=0;i<18;i++){
+   let d=document.createElement('div');d.className='floaty';
+   d.innerText=arr[Math.floor(Math.random()*arr.length)];
+   d.style.left=Math.random()*100+'vw';
+   d.style.bottom='-20px';
+   d.style.animationDuration=(4+Math.random()*4)+'s';
+   document.body.appendChild(d);setTimeout(()=>d.remove(),8000)
+ }
 }
 
-// cursor trail
-window.addEventListener('mousemove',e=>{
-const t=document.createElement('div');
-t.className='trail';
-t.style.left=e.clientX+'px';
-t.style.top=e.clientY+'px';
-document.body.appendChild(t);
-setTimeout(()=>t.remove(),600);
-});
+function burst(e){
+ for(let i=0;i<12;i++){
+  let c=document.createElement('div');c.className='confetti';c.innerText=['✨','💖','🎉'][i%3];
+  c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';
+  c.style.setProperty('--x',(Math.random()*140-70)+'px');
+  c.style.setProperty('--y',(Math.random()*-140)+'px');
+  document.body.appendChild(c);setTimeout(()=>c.remove(),1000)
+ }
+}
 
+// cursor pet
+const pet=document.createElement('div');pet.className='pet';pet.innerText='🐻';document.body.appendChild(pet);
+window.addEventListener('mousemove',e=>{pet.style.left=e.clientX+14+'px';pet.style.top=e.clientY+14+'px'})
+
+function toggleMusic(){let m=document.getElementById('music');m.paused?m.play():m.pause()}
 </script>
-
 </body>
 </html>
