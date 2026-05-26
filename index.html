@@ -89,9 +89,9 @@ button:active{transform:scale(.97)}
 
 <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 <canvas id="bg"></canvas>
-<div class="music" id="musicBtn" onclick="toggleMusic()">🎵 Music</div>
-<audio id="music" loop autoplay>
-<source src="./Happy Birthday Song!!! (mp3cut.net).mp3" type="audio/mpeg">
+<div class="music" id="musicBtn" onclick="toggleMusic()">🎵 Play Music</div>
+<audio id="music" autoplay>
+  <source src="./Happy Birthday Song!!! (mp3cut.net).mp3">
 </audio>
 
 <div class="scene active" id="s1">
@@ -138,12 +138,19 @@ function show(id){document.querySelectorAll('.scene').forEach(s=>s.classList.rem
 function type(id,text,i=0){let el=document.getElementById(id);if(i===0)el.innerHTML='';if(i<text.length){el.innerHTML+=text[i];setTimeout(()=>type(id,text,i+1),24)}}
 
 function start(e){
- show('s2');spawn();burst(e);
- type('t',`Okay 😄\n\nYou somehow manage to be:\nfunny 😂 stressed 😭 happy 😆 dramatic 😤\n\nAnd somehow… still cute.`)
+show('s2');spawn();burst(e);
+
+// start music ONLY on open surprise click
+music.currentTime = 0;
+music.volume = 1;
+music.muted = false;
+music.play().catch(()=>{});
+
+type('t',`Fun chaotic energy detected 😄\n\nFunny 😂 stressed 😭 happy 😆 dramatic 😤\n\nStill cute somehow.`);
 }
 function next(e){
  show('s3');spawn();burst(e);
- type('f',`Happy Birthday Farouqe 🎉\n\nStay funny. Stay chaotic. Stay adorable.\n\nThat’s already a pretty good deal 💖`)
+ type('f',`Happy Birthday Aisha 🎉\n\nStay funny. Stay chaotic. Stay adorable.\n\nThat’s already a pretty good deal 💖`)
 }
 
 function spawn(){
@@ -172,7 +179,17 @@ function burst(e){
 const pet=document.createElement('div');pet.className='pet';pet.innerText='🐻';document.body.appendChild(pet);
 window.addEventListener('mousemove',e=>{pet.style.left=e.clientX+14+'px';pet.style.top=e.clientY+14+'px'})
 
-function toggleMusic(){let m=document.getElementById('music');m.paused?m.play():m.pause()}
+function toggleMusic(){
+  let m=document.getElementById('music');
+  let btn=document.getElementById('musicBtn');
+  if(m.paused){
+    m.volume=1;
+    m.play().then(()=>btn.innerText='⏸ Pause Music').catch(()=>alert('Tap again to allow music 🎵'));
+  }else{
+    m.pause();
+    btn.innerText='🎵 Play Music';
+  }
+}
 </script>
 </body>
 </html>
