@@ -1,195 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Birthday Magic ✨</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎀 Happy Birthday!</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  font-family:system-ui;
-  overflow:hidden;
-  height:100vh;
-  background:radial-gradient(circle at top,#24123d,#0a0818 70%);
-  color:#fff;
-}
-canvas{position:fixed;inset:0;z-index:0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:linear-gradient(160deg,#1a0a2e 0%,#2d1250 40%,#1a0a2e 100%);min-height:100vh;font-family:'Nunito',sans-serif;overflow-x:hidden;cursor:default}
 
-/* aurora blobs */
-.blob{
-  position:fixed;width:340px;height:340px;border-radius:50%;
-  filter:blur(90px);opacity:.45;z-index:0;
-  animation:drift 14s ease-in-out infinite alternate;
-}
-.b1{background:#ff71a8;top:5%;left:8%}
-.b2{background:#7f7cff;bottom:8%;right:10%}
-.b3{background:#ffd56b;top:40%;left:40%}
-@keyframes drift{to{transform:translate(60px,-50px) scale(1.2)}}
+/* Sky & Stars */
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twink var(--d) ease-in-out infinite;opacity:0}
+@keyframes twink{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:var(--o);transform:scale(1)}}
 
-.scene{
-  position:absolute;inset:0;display:flex;justify-content:center;align-items:center;
-  padding:20px;opacity:0;transform:scale(.95) translateY(20px);
-  transition:1s ease;pointer-events:none;z-index:2;text-align:center;
-}
-.scene.active{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}
+/* Confetti */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:200}
+.cp{position:absolute;top:-20px;left:var(--x);width:var(--w);height:var(--h);background:var(--c);border-radius:var(--r);animation:fall var(--dur) var(--del) linear forwards;opacity:0}
+@keyframes fall{0%{transform:translateY(0) rotate(0deg);opacity:1}90%{opacity:.8}100%{transform:translateY(105vh) rotate(var(--rot));opacity:0}}
 
-.card{
-  max-width:560px;width:100%;padding:30px;border-radius:28px;
-  background:rgba(255,255,255,.08);
-  backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 40px 120px rgba(0,0,0,.65);
-  animation:pop .8s ease;
-}
-@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+/* Floating hearts & emojis */
+#floaters{position:fixed;inset:0;pointer-events:none;z-index:3}
+.floater{position:absolute;bottom:-50px;left:var(--x);font-size:var(--s);animation:rise var(--d) var(--del) ease-in infinite;opacity:0}
+@keyframes rise{0%{opacity:0;transform:translateY(0) rotate(var(--r))}10%{opacity:1}85%{opacity:.7}100%{opacity:0;transform:translateY(-110vh) rotate(calc(var(--r)*-2))}}
 
-h1{font-size:2rem;margin-bottom:12px}
-p{white-space:pre-line;line-height:1.7;min-height:140px;opacity:.95}
+/* Balloons on sides */
+#balloons{position:fixed;bottom:0;width:100%;pointer-events:none;z-index:2}
+.bwrap{position:absolute;bottom:0;animation:sway var(--fd) ease-in-out infinite alternate}
+@keyframes sway{0%{transform:translateY(0) rotate(var(--tilt))}100%{transform:translateY(-25px) rotate(calc(var(--tilt)*-1))}}
+.ball{border-radius:50% 50% 45% 45%;position:relative;box-shadow:inset -5px -5px 12px rgba(0,0,0,.18),inset 4px 4px 10px rgba(255,255,255,.22)}
+.ball::before{content:'';position:absolute;top:16%;left:18%;width:26%;height:20%;background:rgba(255,255,255,.4);border-radius:50%;transform:rotate(-28deg)}
+.ball::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border-left:3px solid transparent;border-right:3px solid transparent;border-top:6px solid var(--bc)}
+.bstring{width:1px;height:var(--sh);background:rgba(255,255,255,.35);margin:0 auto}
 
-button{
-  margin-top:14px;padding:14px 20px;border:none;border-radius:16px;
-  background:linear-gradient(90deg,#ff5c8a,#ff9f68);
-  color:#fff;font-size:1rem;cursor:pointer;
-  box-shadow:0 12px 30px rgba(255,92,138,.35);
-  transition:.25s;
-}
-button:hover{transform:translateY(-2px) scale(1.03)}
-button:active{transform:scale(.97)}
+/* Main stage */
+#stage{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem 3rem}
 
-/* cute floating stickers */
-.floaty{position:fixed;font-size:22px;pointer-events:none;animation:rise linear forwards;z-index:3}
-@keyframes rise{
-  0%{transform:translateY(20px) scale(.8);opacity:0}
-  10%{opacity:1}
-  100%{transform:translateY(-100vh) rotate(360deg) scale(1.2);opacity:0}
-}
+/* Banner */
+.banner{font-family:'Pacifico',cursive;font-size:clamp(2rem,6vw,4rem);color:#fff;text-align:center;text-shadow:0 0 40px rgba(255,180,80,.9),0 0 80px rgba(255,100,150,.5);animation:bannerIn 1.2s cubic-bezier(.34,1.56,.64,1) .2s forwards;opacity:0;line-height:1.15;margin-bottom:.2rem}
+@keyframes bannerIn{from{opacity:0;transform:translateY(-50px) scale(.6)}to{opacity:1;transform:translateY(0) scale(1)}}
 
-/* stars twinkle */
-.star{
-  position:fixed;width:3px;height:3px;background:white;border-radius:50%;
-  animation:twinkle 2s infinite alternate;opacity:.6;z-index:1;
-}
-@keyframes twinkle{to{opacity:1;transform:scale(1.8)}}
+.tagline{font-size:clamp(.9rem,2.5vw,1.3rem);color:rgba(255,220,200,.9);font-weight:700;text-align:center;animation:up 1s ease .9s forwards;opacity:0;margin-bottom:2rem;letter-spacing:.04em}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-/* cursor pet */
-.pet{position:fixed;font-size:24px;pointer-events:none;z-index:4;transition:.12s}
+/* Scene container */
+.scene{position:relative;width:min(680px,98vw);animation:up 1s ease .4s forwards;opacity:0}
 
-/* confetti burst */
-.confetti{position:fixed;font-size:14px;pointer-events:none;z-index:5;animation:burst 1s ease-out forwards}
-@keyframes burst{to{transform:translate(var(--x),var(--y)) rotate(540deg);opacity:0}}
+/* Ground */
+.ground{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(180deg,#6b3fa0 0%,#4a2878 100%);border-radius:0 0 16px 16px;overflow:hidden}
+.ground::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0px,rgba(255,255,255,.04) 2px,transparent 2px,transparent 40px)}
 
-.music{
-  position:fixed;top:14px;right:14px;z-index:6;
-  background:rgba(255,255,255,.1);padding:10px 14px;border-radius:999px;
-  font-size:.9rem;cursor:pointer;border:1px solid rgba(255,255,255,.12)
-}
+/* Cake platform */
+.platform{position:absolute;bottom:52px;left:50%;transform:translateX(-50%);z-index:15}
+
+/* Dolls */
+.doll{position:absolute;bottom:52px;display:flex;flex-direction:column;align-items:center;animation:dollBounce 3s ease-in-out infinite}
+@keyframes dollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* Sparkle click effect */
+.sparkle{position:fixed;pointer-events:none;z-index:500;font-size:1.4rem;animation:spark .7s ease forwards}
+@keyframes spark{0%{transform:scale(0) rotate(0);opacity:1}60%{transform:scale(1.4) rotate(180deg);opacity:1}100%{transform:scale(.3) rotate(360deg) translateY(-50px);opacity:0}}
+
+/* Message card */
+.msgcard{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:1.2rem 2rem;text-align:center;color:rgba(220,200,255,.9);font-size:clamp(.85rem,2vw,1.05rem);line-height:1.6;max-width:500px;backdrop-filter:blur(8px);animation:up 1s ease 1.4s forwards;opacity:0;margin-top:1.5rem}
+
+/* Buttons */
+.btnrow{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:up 1s ease 1.7s forwards;opacity:0;margin-top:1.2rem}
+.btn{padding:.75rem 1.8rem;border-radius:50px;border:none;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:900;cursor:pointer;transition:transform .18s,box-shadow .18s;letter-spacing:.02em}
+.btn:hover{transform:translateY(-3px) scale(1.06)}
+.btn:active{transform:scale(.96)}
+.btn-a{background:linear-gradient(135deg,#ff6eb4,#e040a0);color:#fff;box-shadow:0 6px 25px rgba(220,60,150,.5)}
+.btn-b{background:rgba(255,255,255,.1);color:#fff;border:1.5px solid rgba(255,255,255,.3)}
+.btn-b:hover{background:rgba(255,255,255,.18)}
+
+/* Wish text */
+.wishtext{color:#ffd700;font-size:.95rem;font-weight:700;text-align:center;min-height:1.4em;animation:up .4s ease forwards;margin-top:.5rem}
 </style>
 </head>
 <body>
+<div id="sky"></div>
+<div id="confetti"></div>
+<div id="balloons"></div>
+<div id="floaters"></div>
 
-<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-<canvas id="bg"></canvas>
-<div class="music" id="musicBtn" onclick="toggleMusic()">🎵 Play Music</div>
-<audio id="music" loop autoplay>
-  <source src="./Happy Birthday Song!!! (mp3cut.net).mp3">
-</audio>
+<div id="stage">
+  <div class="banner">Happy Birthday! 🎀</div>
+  <p class="tagline">✨ Your magical day is here ✨</p>
 
-<div class="scene active" id="s1">
-  <div class="card">
-    <h1>🎀 Birthday Surprise</h1>
-    <p>A tiny magical experience for someone fun, chaotic, and impossible to ignore ✨</p>
-    <button onclick="start(event)">Open Surprise</button>
+  <div class="scene">
+    <!-- SVG Scene with dolls and cake -->
+    <svg width="100%" viewBox="0 0 680 380" xmlns="http://www.w3.org/2000/svg">
+      <!-- Sky gradient -->
+      <defs>
+        <radialGradient id="glow1" cx="50%" cy="60%" r="45%">
+          <stop offset="0%" stop-color="#7c3aed" stop-opacity=".5"/>
+          <stop offset="100%" stop-color="#1a0a2e" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="glowCake" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fbbf24" stop-opacity=".35"/>
+          <stop offset="100%" stop-color="#fbbf24" stop-opacity="0"/>
+        </radialGradient>
+        <!-- Candle flame flicker -->
+      </defs>
+
+      <!-- Background glow -->
+      <ellipse cx="340" cy="300" rx="260" ry="120" fill="url(#glow1)"/>
+
+      <!-- Ground / Floor -->
+      <rect x="40" y="318" width="600" height="50" rx="12" fill="#3b1f6e"/>
+      <rect x="40" y="318" width="600" height="14" rx="12" fill="#4c2882"/>
+      <!-- Floor pattern -->
+      <line x1="40" y1="332" x2="640" y2="332" stroke="rgba(255,255,255,.05)" stroke-width="1"/>
+      <line x1="120" y1="318" x2="120" y2="368" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+      <line x1="200" y1="318" x2="200" y2="368" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+      <line x1="280" y1="318" x2="280" y2="368" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+      <line x1="360" y1="318" x2="360" y2="368" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+      <line x1="440" y1="318" x2="440" y2="368" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+      <line x1="520" y1="318" x2="520" y2="368" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+      <line x1="600" y1="318" x2="600" y2="368" stroke="rgba(255,255,255,.04)" stroke-width="1"/>
+
+      <!-- ═══════════════════════════════ -->
+      <!--        DOLL 1 — Left (pink)    -->
+      <!-- ═══════════════════════════════ -->
+      <g id="doll1" style="animation:dollBounce 3.2s ease-in-out infinite">
+        <!-- Shadow -->
+        <ellipse cx="145" cy="320" rx="28" ry="5" fill="rgba(0,0,0,.25)"/>
+        <!-- Dress/skirt -->
+        <path d="M118 270 Q120 310 98 318 L192 318 Q170 310 172 270 Z" fill="#ff6eb4"/>
+        <path d="M118 270 Q120 310 98 318 L192 318 Q170 310 172 270 Z" fill="none" stroke="#e040a0" stroke-width="1.5"/>
+        <!-- Dress shimmer -->
+        <path d="M130 280 Q135 305 115 318" stroke="rgba(255,255,255,.25)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Dress frills -->
+        <path d="M98 318 Q105 312 115 318 Q122 312 133 318 Q140 312 150 318 Q157 312 167 318 Q175 312 183 318 L192 318" stroke="#ff9ed8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Bow on dress -->
+        <path d="M132 278 Q140 272 148 278 M132 278 Q140 284 148 278" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="140" cy="278" r="3" fill="#fff"/>
+        <!-- Body/torso -->
+        <rect x="128" y="237" width="24" height="36" rx="8" fill="#ffd6e8"/>
+        <!-- Collar -->
+        <path d="M128 248 Q140 255 152 248" stroke="#ff6eb4" stroke-width="2" fill="none"/>
+        <!-- Arms -->
+        <!-- Left arm up (waving!) -->
+        <path d="M128 248 Q110 235 105 218" stroke="#ffd6e8" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <circle cx="103" cy="215" r="7" fill="#ffd6e8"/>
+        <!-- Right arm down -->
+        <path d="M152 250 Q168 258 172 268" stroke="#ffd6e8" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <circle cx="173" cy="271" r="7" fill="#ffd6e8"/>
+        <!-- Legs -->
+        <rect x="131" y="270" width="10" height="28" rx="5" fill="#ffd6e8"/>
+        <rect x="145" y="270" width="10" height="28" rx="5" fill="#ffd6e8"/>
+        <!-- Shoes -->
+        <ellipse cx="136" cy="299" rx="9" ry="5" fill="#a855f7"/>
+        <ellipse cx="150" cy="299" rx="9" ry="5" fill="#a855f7"/>
+        <!-- Shoe strap -->
+        <line x1="130" y1="296" x2="142" y2="296" stroke="#9333ea" stroke-width="1.5"/>
+        <line x1="144" y1="296" x2="156" y2="296" stroke="#9333ea" stroke-width="1.5"/>
+        <!-- Neck -->
+        <rect x="135" y="231" width="10" height="10" rx="4" fill="#ffd6e8"/>
+        <!-- Head -->
+        <ellipse cx="140" cy="220" rx="22" ry="24" fill="#ffd6e8"/>
+        <!-- Blush -->
+        <ellipse cx="126" cy="224" rx="7" ry="4" fill="rgba(255,150,150,.4)"/>
+        <ellipse cx="154" cy="224" rx="7" ry="4" fill="rgba(255,150,150,.4)"/>
+        <!-- Eyes -->
+        <ellipse cx="133" cy="217" rx="5" ry="6" fill="#1a0a2e"/>
+        <ellipse cx="147" cy="217" rx="5" ry="6" fill="#1a0a2e"/>
+        <circle cx="134" cy="215" r="2" fill="white"/>
+        <circle cx="148" cy="215" r="2" fill="white"/>
+        <!-- Lashes -->
+        <line x1="129" y1="212" x2="127" y2="209" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="133" y1="211" x2="132" y2="208" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="137" y1="212" x2="137" y2="208" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="143" y1="211" x2="143" y2="208" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="147" y1="211" x2="148" y2="208" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="151" y1="212" x2="153" y2="209" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- Smile -->
+        <path d="M133 228 Q140 234 147 228" stroke="#e07070" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Nose -->
+        <ellipse cx="140" cy="224" rx="2.5" ry="1.5" fill="rgba(200,100,100,.3)"/>
+        <!-- Hair (pink) -->
+        <ellipse cx="140" cy="200" rx="22" ry="12" fill="#ff6eb4"/>
+        <!-- Hair sides -->
+        <path d="M118 212 Q112 220 116 232" stroke="#ff6eb4" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M162 212 Q168 220 164 232" stroke="#ff6eb4" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <!-- Pigtails -->
+        <path d="M120 205 Q105 195 100 182" stroke="#ff6eb4" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="98" cy="180" r="10" fill="#ff6eb4"/>
+        <path d="M160 205 Q175 195 180 182" stroke="#ff6eb4" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <circle cx="182" cy="180" r="10" fill="#ff6eb4"/>
+        <!-- Hair ribbons -->
+        <circle cx="98" cy="180" r="6" fill="#fff" opacity=".6"/>
+        <circle cx="182" cy="180" r="6" fill="#fff" opacity=".6"/>
+        <!-- Star accessories -->
+        <text x="88" y="175" font-size="11" text-anchor="middle">⭐</text>
+        <text x="192" y="175" font-size="11" text-anchor="middle">⭐</text>
+      </g>
+
+      <!-- ═══════════════════════════════ -->
+      <!--    BIRTHDAY CAKE (Center)      -->
+      <!-- ═══════════════════════════════ -->
+      <!-- Cake glow -->
+      <ellipse cx="340" cy="290" rx="80" ry="40" fill="url(#glowCake)"/>
+      <!-- Cake plate -->
+      <ellipse cx="340" cy="318" rx="72" ry="9" fill="#c4b5fd" opacity=".4"/>
+      <!-- Bottom tier -->
+      <rect x="285" y="265" width="110" height="52" rx="10" fill="#f9a8d4"/>
+      <rect x="285" y="265" width="110" height="15" rx="10" fill="#f472b6"/>
+      <!-- Frosting drip bottom -->
+      <path d="M293 270 Q302 258 311 270 Q320 258 329 270 Q338 258 347 270 Q356 258 365 270 Q374 258 383 270" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <!-- Bottom tier dots -->
+      <circle cx="300" cy="290" r="4" fill="#fde68a"/>
+      <circle cx="316" cy="298" r="3.5" fill="#a78bfa"/>
+      <circle cx="332" cy="290" r="4" fill="#6ee7b7"/>
+      <circle cx="348" cy="298" r="3.5" fill="#fda4af"/>
+      <circle cx="364" cy="290" r="4" fill="#fde68a"/>
+      <circle cx="380" cy="298" r="3.5" fill="#a78bfa"/>
+      <!-- Middle tier -->
+      <rect x="300" y="225" width="80" height="44" rx="9" fill="#c4b5fd"/>
+      <rect x="300" y="225" width="80" height="13" rx="9" fill="#a78bfa"/>
+      <!-- Frosting drip middle -->
+      <path d="M308 229 Q316 218 324 229 Q332 218 340 229 Q348 218 356 229 Q364 218 372 229" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      <!-- Middle tier hearts -->
+      <text x="320" y="250" font-size="13" text-anchor="middle">💜</text>
+      <text x="340" y="252" font-size="11" text-anchor="middle">✨</text>
+      <text x="360" y="250" font-size="13" text-anchor="middle">💜</text>
+      <!-- Top tier -->
+      <rect x="316" y="193" width="48" height="35" rx="8" fill="#fde68a"/>
+      <rect x="316" y="193" width="48" height="11" rx="8" fill="#fbbf24"/>
+      <!-- Frosting drip top -->
+      <path d="M322 196 Q330 187 338 196 Q346 187 354 196 Q358 187 362 196" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <text x="340" y="213" font-size="11" text-anchor="middle">🌟</text>
+
+      <!-- Candles -->
+      <rect x="326" y="173" width="6" height="22" rx="3" fill="#ff6eb4"/>
+      <rect x="337" y="169" width="6" height="26" rx="3" fill="#a78bfa"/>
+      <rect x="348" y="173" width="6" height="22" rx="3" fill="#6ee7b7"/>
+
+      <!-- Flames (animated via CSS-like SVG animation) -->
+      <g id="fl1">
+        <ellipse cx="329" cy="169" rx="4" ry="6" fill="#fef08a" opacity=".95">
+          <animate attributeName="ry" values="6;7.5;6" dur=".35s" repeatCount="indefinite"/>
+          <animate attributeName="cx" values="329;330;328;329" dur=".35s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="329" cy="171" rx="2.5" ry="4" fill="#f97316">
+          <animate attributeName="ry" values="4;5;4" dur=".35s" repeatCount="indefinite"/>
+        </ellipse>
+      </g>
+      <g id="fl2">
+        <ellipse cx="340" cy="165" rx="4.5" ry="7" fill="#fef08a" opacity=".95">
+          <animate attributeName="ry" values="7;8.5;7" dur=".28s" repeatCount="indefinite"/>
+          <animate attributeName="cx" values="340;341;339;340" dur=".28s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="340" cy="167" rx="3" ry="5" fill="#f97316">
+          <animate attributeName="ry" values="5;6;5" dur=".28s" repeatCount="indefinite"/>
+        </ellipse>
+      </g>
+      <g id="fl3">
+        <ellipse cx="351" cy="169" rx="4" ry="6" fill="#fef08a" opacity=".95">
+          <animate attributeName="ry" values="6;7.2;6" dur=".4s" repeatCount="indefinite"/>
+          <animate attributeName="cx" values="351;350;352;351" dur=".4s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="351" cy="171" rx="2.5" ry="4" fill="#f97316">
+          <animate attributeName="ry" values="4;5;4" dur=".4s" repeatCount="indefinite"/>
+        </ellipse>
+      </g>
+
+      <!-- ═══════════════════════════════ -->
+      <!--   DOLL 2 — Right (lavender)    -->
+      <!-- ═══════════════════════════════ -->
+      <g id="doll2" style="animation:dollBounce 2.8s ease-in-out infinite;animation-delay:.5s">
+        <!-- Shadow -->
+        <ellipse cx="535" cy="320" rx="28" ry="5" fill="rgba(0,0,0,.25)"/>
+        <!-- Dress -->
+        <path d="M508 270 Q510 310 488 318 L582 318 Q562 310 562 270 Z" fill="#a78bfa"/>
+        <path d="M508 270 Q510 310 488 318 L582 318 Q562 310 562 270 Z" fill="none" stroke="#7c3aed" stroke-width="1.5"/>
+        <!-- Dress shimmer -->
+        <path d="M520 280 Q525 305 505 318" stroke="rgba(255,255,255,.25)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- Ruffle -->
+        <path d="M488 318 Q495 312 505 318 Q512 312 522 318 Q530 312 540 318 Q548 312 558 318 Q565 312 573 318 L582 318" stroke="#c4b5fd" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- Bow on dress -->
+        <path d="M523 278 Q531 272 539 278 M523 278 Q531 284 539 278" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="531" cy="278" r="3" fill="#fff"/>
+        <!-- Star pattern on dress -->
+        <text x="515" y="300" font-size="9">✦</text>
+        <text x="540" y="295" font-size="9">✦</text>
+        <text x="555" y="302" font-size="9">✦</text>
+        <!-- Torso -->
+        <rect x="519" y="237" width="24" height="36" rx="8" fill="#ffe4d6"/>
+        <!-- Collar -->
+        <path d="M519 248 Q531 255 543 248" stroke="#a78bfa" stroke-width="2" fill="none"/>
+        <!-- Arms -->
+        <!-- Right arm up (waving!) -->
+        <path d="M543 248 Q560 235 565 218" stroke="#ffe4d6" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <circle cx="567" cy="215" r="7" fill="#ffe4d6"/>
+        <!-- Left arm holds something -->
+        <path d="M519 250 Q502 258 497 268" stroke="#ffe4d6" stroke-width="9" fill="none" stroke-linecap="round"/>
+        <circle cx="496" cy="271" r="7" fill="#ffe4d6"/>
+        <!-- Small gift in hand -->
+        <rect x="484" y="265" width="20" height="18" rx="3" fill="#fbbf24"/>
+        <rect x="484" y="265" width="20" height="6" rx="3" fill="#f59e0b"/>
+        <line x1="494" y1="265" x2="494" y2="283" stroke="#f97316" stroke-width="1.5"/>
+        <path d="M488 265 Q494 260 500 265" stroke="#f97316" stroke-width="1.5" fill="none"/>
+        <!-- Legs -->
+        <rect x="522" y="270" width="10" height="28" rx="5" fill="#ffe4d6"/>
+        <rect x="536" y="270" width="10" height="28" rx="5" fill="#ffe4d6"/>
+        <!-- Shoes -->
+        <ellipse cx="527" cy="299" rx="9" ry="5" fill="#f472b6"/>
+        <ellipse cx="541" cy="299" rx="9" ry="5" fill="#f472b6"/>
+        <line x1="521" y1="296" x2="533" y2="296" stroke="#db2777" stroke-width="1.5"/>
+        <line x1="535" y1="296" x2="547" y2="296" stroke="#db2777" stroke-width="1.5"/>
+        <!-- Neck -->
+        <rect x="526" y="231" width="10" height="10" rx="4" fill="#ffe4d6"/>
+        <!-- Head -->
+        <ellipse cx="531" cy="220" rx="22" ry="24" fill="#ffe4d6"/>
+        <!-- Blush -->
+        <ellipse cx="517" cy="224" rx="7" ry="4" fill="rgba(255,150,150,.4)"/>
+        <ellipse cx="545" cy="224" rx="7" ry="4" fill="rgba(255,150,150,.4)"/>
+        <!-- Eyes (bigger, sparklier) -->
+        <ellipse cx="524" cy="217" rx="5.5" ry="6.5" fill="#1a0a2e"/>
+        <ellipse cx="538" cy="217" rx="5.5" ry="6.5" fill="#1a0a2e"/>
+        <circle cx="525.5" cy="215" r="2.2" fill="white"/>
+        <circle cx="539.5" cy="215" r="2.2" fill="white"/>
+        <circle cx="524" cy="219" r="1" fill="#a78bfa" opacity=".7"/>
+        <circle cx="538" cy="219" r="1" fill="#a78bfa" opacity=".7"/>
+        <!-- Lashes -->
+        <line x1="520" y1="212" x2="518" y2="209" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="524" y1="211" x2="523" y2="208" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="528" y1="212" x2="528" y2="208" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="534" y1="211" x2="534" y2="208" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="538" y1="211" x2="539" y2="208" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="542" y1="212" x2="544" y2="209" stroke="#1a0a2e" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- Smile -->
+        <path d="M524 229 Q531 235 538 229" stroke="#c05070" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="524" cy="229" r="1.5" fill="#f9a8d4"/>
+        <circle cx="538" cy="229" r="1.5" fill="#f9a8d4"/>
+        <!-- Nose -->
+        <ellipse cx="531" cy="224" rx="2.5" ry="1.5" fill="rgba(200,100,100,.3)"/>
+        <!-- Hair (lavender/blonde) -->
+        <ellipse cx="531" cy="200" rx="22" ry="13" fill="#fde68a"/>
+        <!-- Hair sides -->
+        <path d="M509 213 Q504 222 508 233" stroke="#fde68a" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <path d="M553 213 Q558 222 554 233" stroke="#fde68a" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <!-- Bun / updo -->
+        <circle cx="531" cy="195" r="16" fill="#fde68a"/>
+        <circle cx="531" cy="195" r="11" fill="#fbbf24"/>
+        <!-- Tiara / crown -->
+        <path d="M515 196 L518 183 L524 192 L531 178 L538 192 L544 183 L547 196 Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="1"/>
+        <circle cx="531" cy="179" r="3.5" fill="#f472b6"/>
+        <circle cx="519" cy="184" r="2.5" fill="#a78bfa"/>
+        <circle cx="543" cy="184" r="2.5" fill="#a78bfa"/>
+        <!-- Jewel shine -->
+        <circle cx="531" cy="179" r="1.5" fill="white" opacity=".7"/>
+      </g>
+
+      <!-- Floating stars around scene -->
+      <text x="60" y="260" font-size="18" opacity=".7">✨</text>
+      <text x="610" y="250" font-size="16" opacity=".7">✨</text>
+      <text x="80" y="180" font-size="14" opacity=".5">⭐</text>
+      <text x="590" y="190" font-size="14" opacity=".5">⭐</text>
+      <text x="220" y="150" font-size="12" opacity=".4">💫</text>
+      <text x="445" y="148" font-size="12" opacity=".4">💫</text>
+    </svg>
+  </div>
+
+  <p class="msgcard">Today we celebrate YOU! 🎀 May every moment sparkle with joy, every wish come true, and every bite of cake taste like pure magic. You are so loved! 💖✨</p>
+  <p class="wishtext" id="wt"></p>
+  <div class="btnrow">
+    <button class="btn btn-a" id="cb">🎉 Celebrate!</button>
+    <button class="btn btn-b" id="wb">🌟 Make a Wish</button>
   </div>
 </div>
 
-<div class="scene" id="s2">
-  <div class="card">
-    <h1>Hey Farouqe 👋</h1>
-    <p id="t"></p>
-    <button onclick="next(event)">One More</button>
-  </div>
-</div>
-
-<div class="scene" id="s3">
-  <div class="card">
-    <h1>💖 Happy Birthday</h1>
-    <p id="f"></p>
-  </div>
-</div>
+<style>
+@keyframes dollBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#doll1{animation:dollBounce 3.2s ease-in-out infinite}
+#doll2{animation:dollBounce 2.8s ease-in-out infinite;animation-delay:.5s}
+</style>
 
 <script>
-// stars
-for(let i=0;i<50;i++){
- let s=document.createElement('div');
- s.className='star';
- s.style.left=Math.random()*100+'vw';
- s.style.top=Math.random()*100+'vh';
- s.style.animationDelay=Math.random()*2+'s';
- document.body.appendChild(s);
+const colors=['#ff6eb4','#ffd700','#c084fc','#6ee7b7','#f9a8d4','#fbbf24','#a78bfa','#ff8b94','#86efac'];
+const emojis=['💖','💝','⭐','✨','🎀','🌸','💫','🎊','🎈','🌈','🍰','🎁'];
+const wishes=['🌟 Wish sent straight to the stars!','💫 Magic is flying your way!','🎁 Something wonderful is coming...','🌈 The universe heard you!','✨ Granted! (with extra glitter!)','💖 Your heart\'s desire is on its way!'];
+
+// Stars
+const sky=document.getElementById('sky');
+for(let i=0;i<140;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${Math.random()*4+2}s;--o:${Math.random()*.8+.2};animation-delay:${Math.random()*6}s`;sky.appendChild(s)}
+
+// Balloons
+const balloonData=[
+  {x:2,bc:'#ff6eb4',w:52,sh:95,tilt:-7,fd:'4s'},{x:8,bc:'#fde68a',w:62,sh:115,tilt:5,fd:'3.7s'},
+  {x:15,bc:'#a78bfa',w:48,sh:80,tilt:-4,fd:'4.4s'},{x:82,bc:'#6ee7b7',w:55,sh:100,tilt:6,fd:'3.9s'},
+  {x:89,bc:'#f9a8d4',w:60,sh:108,tilt:-6,fd:'4.2s'},{x:95,bc:'#fbbf24',w:48,sh:78,tilt:8,fd:'3.6s'},
+];
+const bEl=document.getElementById('balloons');
+balloonData.forEach(b=>{const w=document.createElement('div');w.className='bwrap';w.style.cssText=`left:${b.x}%;--fd:${b.fd};--tilt:${b.tilt}deg`;w.innerHTML=`<div class="ball" style="width:${b.w}px;height:${b.w*1.2}px;--bc:${b.bc};background:${b.bc}"></div><div class="bstring" style="--sh:${b.sh}px;height:${b.sh}px"></div>`;bEl.appendChild(w)});
+
+// Floaters
+const fEl=document.getElementById('floaters');
+for(let i=0;i<20;i++){const f=document.createElement('div');f.className='floater';f.textContent=emojis[Math.floor(Math.random()*emojis.length)];f.style.cssText=`--x:${Math.random()*100}%;--s:${Math.random()*1.4+.7}rem;--d:${Math.random()*6+5}s;--del:${Math.random()*10}s;--r:${Math.random()*40-20}deg`;fEl.appendChild(f)}
+
+function boom(big){
+  const c=document.getElementById('confetti');
+  const n=big?90:45;
+  for(let i=0;i<n;i++){const p=document.createElement('div');p.className='cp';const w=Math.random()*10+4,h=Math.random()>0.5?Math.random()*14+5:w;const col=colors[Math.floor(Math.random()*colors.length)];p.style.cssText=`--x:${Math.random()*100}%;--w:${w}px;--h:${h}px;--c:${col};--r:${Math.random()>0.5?'3px':'50%'};--dur:${Math.random()*3.5+2.5}s;--del:${big?Math.random()*.4:Math.random()*2.5}s;--rot:${Math.random()*720-360}deg`;c.appendChild(p);setTimeout(()=>p.remove(),big?5500:7000)}
 }
 
-// particle bg
-const c=document.getElementById('bg'),x=c.getContext('2d');
-c.width=innerWidth;c.height=innerHeight;
-let pts=Array.from({length:70},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3}));
-function bg(){x.clearRect(0,0,c.width,c.height);pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>c.width)p.dx*=-1;if(p.y<0||p.y>c.height)p.dy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.28);x.fillStyle='rgba(255,255,255,.25)';x.fill()});requestAnimationFrame(bg)}bg();
+document.addEventListener('click',e=>{
+  for(let i=0;i<6;i++){const s=document.createElement('div');s.className='sparkle';s.textContent=['✨','💫','⭐','🌟','💖','🎀'][Math.floor(Math.random()*6)];s.style.left=(e.clientX+Math.random()*70-35)+'px';s.style.top=(e.clientY+Math.random()*70-35)+'px';document.body.appendChild(s);setTimeout(()=>s.remove(),800)}
+});
 
-function show(id){document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-function type(id,text,i=0){let el=document.getElementById(id);if(i===0)el.innerHTML='';if(i<text.length){el.innerHTML+=text[i];setTimeout(()=>type(id,text,i+1),24)}}
+let wc=0;
+document.getElementById('wb').addEventListener('click',function(){
+  boom(false);
+  const wt=document.getElementById('wt');
+  wt.textContent=wishes[wc%wishes.length];wc++;
+  this.textContent='🌟 Wish Again!';
+  setTimeout(()=>{wt.textContent='';this.textContent='🌟 Make a Wish'},3500);
+});
 
-function start(e){
-show('s2');spawn();burst(e);
+document.getElementById('cb').addEventListener('click',()=>{
+  boom(true);
+  for(let i=0;i<8;i++){const f=document.createElement('div');f.className='floater';f.textContent=emojis[Math.floor(Math.random()*emojis.length)];f.style.cssText=`--x:${Math.random()*100}%;--s:${Math.random()*2+1}rem;--d:${Math.random()*4+3}s;--del:0s;--r:${Math.random()*40-20}deg;position:fixed;bottom:-50px`;fEl.appendChild(f);setTimeout(()=>f.remove(),9000)}
+});
 
-// start music ONLY on open surprise click
-music.currentTime = 0;
-music.volume = 1;
-music.muted = false;
-music.play().catch(()=>{});
-
-type('t',`Fun chaotic energy detected 😄\n\nFunny 😂 stressed 😭 happy 😆 dramatic 😤\n\nStill cute somehow.`);
-}
-function next(e){
- show('s3');spawn();burst(e);
- type('f',`Happy Birthday Farouqe 🎉\n\nStay funny. Stay chaotic. Stay adorable.\n\nThat’s already a pretty good deal 💖`)
-}
-
-function spawn(){
- let arr=['💖','🌸','✨','🎀','🐻','🐱','💫'];
- for(let i=0;i<18;i++){
-   let d=document.createElement('div');d.className='floaty';
-   d.innerText=arr[Math.floor(Math.random()*arr.length)];
-   d.style.left=Math.random()*100+'vw';
-   d.style.bottom='-20px';
-   d.style.animationDuration=(4+Math.random()*4)+'s';
-   document.body.appendChild(d);setTimeout(()=>d.remove(),8000)
- }
-}
-
-function burst(e){
- for(let i=0;i<12;i++){
-  let c=document.createElement('div');c.className='confetti';c.innerText=['✨','💖','🎉'][i%3];
-  c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';
-  c.style.setProperty('--x',(Math.random()*140-70)+'px');
-  c.style.setProperty('--y',(Math.random()*-140)+'px');
-  document.body.appendChild(c);setTimeout(()=>c.remove(),1000)
- }
-}
-
-// cursor pet
-const pet=document.createElement('div');pet.className='pet';pet.innerText='🐻';document.body.appendChild(pet);
-window.addEventListener('mousemove',e=>{pet.style.left=e.clientX+14+'px';pet.style.top=e.clientY+14+'px'})
-
-function toggleMusic(){
-  let m=document.getElementById('music');
-  let btn=document.getElementById('musicBtn');
-  if(m.paused){
-    m.volume=1;
-    m.play().then(()=>btn.innerText='⏸ Pause Music').catch(()=>alert('Tap again to allow music 🎵'));
-  }else{
-    m.pause();
-    btn.innerText='🎵 Play Music';
-  }
-}
+setTimeout(()=>boom(false),500);
+setTimeout(()=>boom(true),1400);
 </script>
 </body>
 </html>
